@@ -1,0 +1,42 @@
+% Copyright Sep, 2023, All Rights Reserved.
+% Code by Zeyad M. Manaa
+%
+% For:
+%   - AE 315 - Systems and Control Course.
+%   - Fall 2023
+
+clear all; clc; close all;
+
+
+% Motor params
+J = 0.01;
+b = 0.1;
+K = 0.01;
+R = 1;
+L = 0.5;
+A = [-b/J K/J; -K/L -R/L];
+B = [0; 1/L];
+C = [1 0];
+D = 0;
+t = 0:0.01:20;
+
+
+% Motor transfer function
+motor_ss = ss(A, B, C, D);
+
+% Plot
+[y, t] = step(motor_ss, t);
+fig = figure(1);
+set(fig, 'color', 'w');
+plot(t, y, 'LineWidth', 2);
+grid on;
+hold on;
+xlabel('Time', 'Interpreter', 'latex', 'FontSize', 14);
+ylabel('System Response', 'Interpreter', 'latex', 'FontSize', 14);
+title('Step Response', 'Interpreter', 'latex', 'FontSize', 16);
+
+
+[b,a] = ss2tf(A, B, C, D)
+
+G = tf(b, a);
+

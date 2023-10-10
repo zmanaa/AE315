@@ -1,0 +1,65 @@
+% Copyright Sep, 2023, All Rights Reserved.
+% Code by Zeyad M. Manaa.
+% For:
+%   - AE 315 - Systems and Control Course.
+%   - Fall 2023
+
+clear all; clc;
+
+
+% Define system parameters
+m = 1;      % Mass (kg)
+k = 5;     % Spring constant (N/m)
+c = 2;    % Damping coefficient (Ns/m)
+
+% Define initial conditions
+x0 = 0;     % Initial displacement (m)
+v0 = 0;     % Initial velocity (m/s)
+
+% Define simulation time span
+tspan = [0 10];     % Simulation time from 0 to 10 seconds
+
+
+% Solve the differential equation using ode45
+[t, y] = ode45(@(t, y)mass_spring_damper_equation(t, y, m, k, c), ...
+    tspan, [x0; v0]);
+
+% Extract displacement and velocity from the solution
+x = y(:, 1);
+v = y(:, 2);
+
+% Plot the charge on the capacitor as a function of time
+fig = figure;
+set(fig, 'Color', 'w');  % Set figure background to white
+%subplot(2, 1, 1);
+plot(t, x, 'b-', 'LineWidth', 1.5);
+xlabel('Time $s$', 'Interpreter', ...
+    'latex', 'FontSize', 18);  
+ylabel('Displacement $m$', 'Interpreter', ...
+    'latex', 'FontSize', 18); 
+%subplot(2, 1, 2);
+%plot(t, v, 'r-', 'LineWidth', 1.5);
+%xlabel('Time $s$', 'Interpreter', ...
+%    'latex', 'FontSize', 18);  
+%ylabel('Velocity $m/s$', 'Interpreter', ...
+%
+% 'latex', 'FontSize', 18); 
+
+set(gca, 'TickLabelInterpreter', ...
+    'latex', 'FontSize', 16);  
+
+
+function dydt = mass_spring_damper_equation(t, y, m, k, c)
+    % y = [x; x_dot]
+    % Extract state variables
+    z1 = y(1);
+    z2 = y(2);
+    
+    % Define the differential equations
+    z1_dot = z2;
+    F = 3;
+    z2_dot = (F -k*z1 - c*z2) / m;
+
+    % Pack the derivatives into a column vector
+    dydt = [z1_dot; z2_dot];
+end
